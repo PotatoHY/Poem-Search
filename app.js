@@ -1,4 +1,4 @@
-var poem_list = [
+var poemList = [
   { 
     title: "靜夜思", 
     author: "李白", 
@@ -19,10 +19,18 @@ var poem_list = [
   }
 ]
 
-function search() {
-  var inputField = document.getElementById("word")
+function search(event) {
   var resultsDiv = document.getElementById("results")
-  var word = inputField.value
+
+  // TODO: get rid of else statement after debugging
+  if (event)
+    var word = event.srcElement.innerHTML
+  else {
+    // var inputField = document.getElementById("word")
+    // if (inputField)
+    //   var word = inputField.value
+  }
+
   if (word === "") {
     resultsDiv.innerHTML = ""
     return
@@ -30,8 +38,7 @@ function search() {
 
   // search logic
   var results = []
-  // var poem_list = JSON.parse(poem_list)
-  poem_list.forEach((poem) => {
+  poemList.forEach((poem) => {
     if (poem.content.indexOf(word) >= 0) {
       results.push(poem)
     }
@@ -40,7 +47,13 @@ function search() {
   // display results
   resultsDiv.innerHTML = ""
 
+  text = document.createElement("p")
+  text.innerHTML = "相關詩詞："
+  text.setAttribute("id", "相關詩詞")
+  resultsDiv.append(text)
+
   results.forEach((poem) => {
+    // TODO: 記得skip自己
     title = document.createElement("h2")
     title.innerHTML = poem.title
     author = document.createElement("h3")
@@ -51,8 +64,52 @@ function search() {
   })
 }
 
+function onClickTitle(event){
+  var poemTitle = event.srcElement.innerHTML
+  var requiredPoem = {}
+  poemList.forEach((poem) => {
+    if (poem.title === poemTitle) {
+      requiredPoem = poem
+    }
+  })
+
+  var poemDiv = document.getElementById("poem")
+  title = document.createElement("h2")
+  title.innerHTML = requiredPoem.title
+  author = document.createElement("h3")
+  author.innerHTML = requiredPoem.author
+  content = document.createElement("p")
+  content.innerHTML = requiredPoem.content
+
+  // TODO: change keywords in content to label onClick = "search(event)"
+  // TODO: change label CSS
+
+  poemDiv.innerHTML = ""
+  poemDiv.append(title, author, content)
+
+  var homePage = document.getElementById("home_page")
+  var poemPage = document.getElementById("poem_page")
+  homePage.setAttribute("style", "display: none")
+  poemPage.setAttribute("style", "")
+}
+
+function onClickBack() {
+  var homePage = document.getElementById("home_page")
+  var poemPage = document.getElementById("poem_page")
+  homePage.setAttribute("style", "")
+  poemPage.setAttribute("style", "display: none")
+}
+
 function onDocumentReady() {
-  // change color of content according to each keyword
+  var homePage = document.getElementById("home_page")
+  
+  poemList.forEach((poem) => {
+    title = document.createElement("p")
+    title.innerHTML = poem.title
+    title.setAttribute("id","poem_link")
+    title.setAttribute("onclick","onClickTitle(event)")
+    homePage.append(title)
+  })
 }
 
 $( document ).ready(onDocumentReady);

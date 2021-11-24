@@ -6,16 +6,28 @@
   <script src="jquery-ui.js"></script>
   <link rel="stylesheet" href="style.css">
   <script src="app.js"></script>
-  <script type="text/javascript" src="poems.json"></script>
 </head>
+<body>
 
   <h1>詩詞超文本</h1>
-  <label for="word">請輸入詞語：</label>
-  <input id="word">
-  <button onClick="search()">搜尋！</button>
 
-  <div id="results"></div>
-  <p id="error"></p>
+  <div id="home_page"></div>
+
+  <div id="poem_page" style="display: none">
+
+    <div id="poem"></div>
+
+    <!-- <label for="word">請輸入詞語：</label>
+    <input id="word">
+    <button onClick="search()">搜尋！</button> -->
+
+    <div id="results"></div>
+    <p id="error"></p>
+
+    <button onclick="onClickBack()">返回</button>
+
+  </div>
+
 </body>
 
 </html>
