@@ -2,7 +2,7 @@ body {
 	font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
 }
 
-#poem_link {
+.poem_link {
   color: blue;
   text-decoration: underline;
 }

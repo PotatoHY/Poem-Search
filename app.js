@@ -25,18 +25,17 @@ var poemList = [
   },
 ]
 
-function search(event, key) {
+var currentPoem = null;
+
+function search(event) {
   var resultsDiv = document.getElementById("results")
 
-  // TODO: get rid of else statement after debugging
-
-  var word = key;
+  var word = event.srcElement.innerHTML;
 
   // search logic
   var results = []
   poemList.forEach((poem) => {
-    console.log(word)
-    if (poem.content.indexOf(word) >= 0) {
+    if (poem.content.indexOf(word) >= 0 && poem !== currentPoem) {
       results.push(poem)
     }
   })
@@ -44,21 +43,24 @@ function search(event, key) {
   // display results
   resultsDiv.innerHTML = ""
 
-  text = document.createElement("p")
-  text.innerHTML = "相關詩詞："
-  text.setAttribute("id", "相關詩詞")
-  resultsDiv.append(text)
-  results.forEach((poem) => {
-    // TODO: 記得skip自己
-    title = document.createElement("p")
-    title.innerHTML = '<label style="color: red" onclick="onClickTitle(event)">' + poem.title + '</label>'
-    resultsDiv.append(title)
-      
-
-  })
+  if (results.length > 0) {
+    text = document.createElement("p")
+    text.innerHTML = "相關詩詞："
+    text.setAttribute("id", "相關詩詞")
+    resultsDiv.append(text)
+    
+    results.forEach((poem) => {
+      title = document.createElement("p")
+      title.innerHTML = '<label class="poem_link" onclick="onClickTitle(event)">' + poem.title + '</label>'
+      resultsDiv.append(title)
+    })
+  }
 }
 
 function onClickTitle(event){
+  var poemDiv = document.getElementById("poem")
+  var resultsDiv = document.getElementById("results")
+
   var poemTitle = event.srcElement.innerHTML
   var requiredPoem = {}
   poemList.forEach((poem) => {
@@ -67,7 +69,9 @@ function onClickTitle(event){
     }
   })
 
-  var poemDiv = document.getElementById("poem")
+  resultsDiv.innerHTML = ""
+  poemDiv.innerHTML = ""
+
   title = document.createElement("h2")
   title.innerHTML = requiredPoem.title
   author = document.createElement("h3")
@@ -75,20 +79,15 @@ function onClickTitle(event){
   content = document.createElement("p")
   content.innerHTML = requiredPoem.content
   requiredPoem.keywords.forEach((key)=>{
-        content.innerHTML = content.innerHTML.replace(key, '<label style="color: blue" onclick="search(event,\''+ key + '\')">' + key + '</label>')
-    })
-
-
-  // TODO: change keywords in content to label onClick = "search(event)"
-  // TODO: change label CSS
-
-  poemDiv.innerHTML = ""
+    content.innerHTML = content.innerHTML.replace(key, '<label style="color: blue" onclick="search(event)">' + key + '</label>')
+  })
   poemDiv.append(title, author, content)
 
   var homePage = document.getElementById("home_page")
   var poemPage = document.getElementById("poem_page")
   homePage.setAttribute("style", "display: none")
   poemPage.setAttribute("style", "")
+  currentPoem = requiredPoem
 }
 
 function onClickBack() {
@@ -96,6 +95,7 @@ function onClickBack() {
   var poemPage = document.getElementById("poem_page")
   homePage.setAttribute("style", "")
   poemPage.setAttribute("style", "display: none")
+  currentPoem = null
 }
 
 function onDocumentReady() {
@@ -104,7 +104,7 @@ function onDocumentReady() {
   poemList.forEach((poem) => {
     title = document.createElement("p")
     title.innerHTML = poem.title
-    title.setAttribute("id","poem_link")
+    title.setAttribute("class","poem_link")
     title.setAttribute("onclick","onClickTitle(event)")
     homePage.append(title)
   })
