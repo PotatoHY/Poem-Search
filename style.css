@@ -7,7 +7,7 @@ body {
   text-decoration: underline;
 }
 
-#相關詩詞 {
+.result_heading {
   color: green;
   font-weight: bold;
   font-size: 150%;

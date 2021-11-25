@@ -21,7 +21,7 @@ var poemList = [
     title: "甜蜜的復仇",
     author: "夏宇",
     content: "把你的影子加點鹽 醃起來 風乾 老的時候 下酒 ",
-    keyword: ["酒"]
+    keywords: ["酒"]
   },
 ]
 
@@ -45,21 +45,15 @@ function search(event) {
   resultsDiv.innerHTML = ""
 
   if (results.length > 0) {
-    var text = document.createElement("p")
-    text.innerHTML = "相關詩詞："
-    text.setAttribute("id", "相關詩詞")
+    var text = createHTMLElement("p", "相關詩詞：", "result_heading")
     resultsDiv.append(text)
     
     results.forEach((result) => {
       var poem = result.poem
-      var title = document.createElement("p")
-      title.innerHTML = poem.title
-      title.setAttribute("class", "poem_link")
-      title.setAttribute("onclick", "onClickTitle(event)")
+      var title = createHTMLElement("p", poem.title, "poem_link", "onClickTitle(event)")
       var index = result.foundIndex
       var excerptContent = poem.content.slice(Math.max(index - 5, 0), Math.min(index + 5, poem.content.length - 1))
-      var excerpt = document.createElement("p")
-      excerpt.innerHTML = "..." + excerptContent + "..."
+      var excerpt = createHTMLElement("p", "..." + excerptContent + "...")
       excerpt.innerHTML = excerpt.innerHTML.replace(keyword, '<label style="color: blue">' + keyword + '</label>')
       resultsDiv.append(title, excerpt)
     })
@@ -81,12 +75,9 @@ function onClickTitle(event){
   resultsDiv.innerHTML = ""
   poemDiv.innerHTML = ""
 
-  var title = document.createElement("h2")
-  title.innerHTML = requiredPoem.title
-  var author = document.createElement("h3")
-  author.innerHTML = requiredPoem.author
-  var content = document.createElement("p")
-  content.innerHTML = requiredPoem.content
+  var title = createHTMLElement("h2", requiredPoem.title)
+  var author = createHTMLElement("h3", requiredPoem.author)
+  var content = createHTMLElement("p", requiredPoem.content)
   requiredPoem.keywords.forEach((key)=>{
     content.innerHTML = content.innerHTML.replace(key, '<label style="color: blue" onclick="search(event)">' + key + '</label>')
   })
@@ -109,14 +100,20 @@ function onClickBack() {
 
 function onDocumentReady() {
   var homePage = document.getElementById("home_page")
-  
   poemList.forEach((poem) => {
-    var title = document.createElement("p")
-    title.innerHTML = poem.title
-    title.setAttribute("class","poem_link")
-    title.setAttribute("onclick","onClickTitle(event)")
+    var title = createHTMLElement("p", poem.title, "poem_link", "onClickTitle(event)")
     homePage.append(title)
   })
+}
+
+function createHTMLElement(type, innerHTML, className, onClickEvent) {
+  var element = document.createElement(type)
+  element.innerHTML = innerHTML
+  if (className)
+    element.setAttribute("class", className)
+  if (onClickEvent)
+    element.setAttribute("onclick", onClickEvent)
+  return element
 }
 
 $( document ).ready(onDocumentReady);
