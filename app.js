@@ -78,9 +78,10 @@ function onClickTitle(event){
   var title = createHTMLElement("h2", requiredPoem.title)
   var author = createHTMLElement("h3", requiredPoem.author)
   var content = createHTMLElement("p", requiredPoem.content)
-  requiredPoem.keywords.forEach((key)=>{
-    content.innerHTML = content.innerHTML.replace(key, '<label style="color: blue" onclick="search(event)">' + key + '</label>')
-  })
+  if (requiredPoem.keywords) 
+    requiredPoem.keywords.forEach((key)=>{
+      content.innerHTML = content.innerHTML.replace(key, '<label style="color: blue" onclick="search(event)">' + key + '</label>')
+    })
   poemDiv.append(title, author, content)
 
   var homePage = document.getElementById("home_page")
