@@ -30,13 +30,14 @@ var currentPoem = null;
 function search(event) {
   var resultsDiv = document.getElementById("results")
 
-  var word = event.srcElement.innerHTML;
+  var keyword = event.srcElement.innerHTML;
 
   // search logic
   var results = []
   poemList.forEach((poem) => {
-    if (poem.content.indexOf(word) >= 0 && poem !== currentPoem) {
-      results.push(poem)
+    var index = poem.content.indexOf(keyword)
+    if (index >= 0 && poem !== currentPoem) {
+      results.push({ poem: poem, foundIndex: index })
     }
   })
 
@@ -44,15 +45,23 @@ function search(event) {
   resultsDiv.innerHTML = ""
 
   if (results.length > 0) {
-    text = document.createElement("p")
+    var text = document.createElement("p")
     text.innerHTML = "相關詩詞："
     text.setAttribute("id", "相關詩詞")
     resultsDiv.append(text)
     
-    results.forEach((poem) => {
-      title = document.createElement("p")
-      title.innerHTML = '<label class="poem_link" onclick="onClickTitle(event)">' + poem.title + '</label>'
-      resultsDiv.append(title)
+    results.forEach((result) => {
+      var poem = result.poem
+      var title = document.createElement("p")
+      title.innerHTML = poem.title
+      title.setAttribute("class", "poem_link")
+      title.setAttribute("onclick", "onClickTitle(event)")
+      var index = result.foundIndex
+      var excerptContent = poem.content.slice(Math.max(index - 5, 0), Math.min(index + 5, poem.content.length - 1))
+      var excerpt = document.createElement("p")
+      excerpt.innerHTML = "..." + excerptContent + "..."
+      excerpt.innerHTML = excerpt.innerHTML.replace(keyword, '<label style="color: blue">' + keyword + '</label>')
+      resultsDiv.append(title, excerpt)
     })
   }
 }
@@ -72,11 +81,11 @@ function onClickTitle(event){
   resultsDiv.innerHTML = ""
   poemDiv.innerHTML = ""
 
-  title = document.createElement("h2")
+  var title = document.createElement("h2")
   title.innerHTML = requiredPoem.title
-  author = document.createElement("h3")
+  var author = document.createElement("h3")
   author.innerHTML = requiredPoem.author
-  content = document.createElement("p")
+  var content = document.createElement("p")
   content.innerHTML = requiredPoem.content
   requiredPoem.keywords.forEach((key)=>{
     content.innerHTML = content.innerHTML.replace(key, '<label style="color: blue" onclick="search(event)">' + key + '</label>')
@@ -102,7 +111,7 @@ function onDocumentReady() {
   var homePage = document.getElementById("home_page")
   
   poemList.forEach((poem) => {
-    title = document.createElement("p")
+    var title = document.createElement("p")
     title.innerHTML = poem.title
     title.setAttribute("class","poem_link")
     title.setAttribute("onclick","onClickTitle(event)")
